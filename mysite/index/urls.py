@@ -8,6 +8,10 @@ app_name = 'index'
 urlpatterns=[
     url(r'^$',views.main,name='index'),
     url('flights', views.flights),
+    url('addnewflight', views.addNewFlight),
     url('tickets', views.tickets),
+    url('addnewticket', views.addNewTicket),
+    url('agency', views.agency),
+
 
 ]
