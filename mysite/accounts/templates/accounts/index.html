@@ -6,7 +6,9 @@
     {% if user.is_authenticated %}
         <h2>Hello {{ user.username }}</h2>
     {% else %}
-        <h2>Register or Login if you'd like to</h2>
+        <h2>Which type of user are you?</h2>
+        <button type="button">Usual User</button>
+        <button type="button">Agent</button>
     {% endif %}
   </div>
 </div>
