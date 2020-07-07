@@ -7,7 +7,7 @@ from django.http import HttpResponse
 
 from django.template import loader
 from index.forms import FlightForm
-from index.models import Flight, Ticket, Agency
+from index.models import Flight, Ticket, Agency, Airport, Crew
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 
@@ -91,8 +91,93 @@ def agency(request):
     agency_data = []
     for item in obj:
         serialized_obj = model_to_dict(item)
-        agency_data.append(serialized_objb)
+        agency_data.append(serialized_obj)
 
     context = {'data': agency_data}
     print(context)
     return HttpResponse(template.render(context, request))
+
+
+@csrf_exempt 
+def addNewAgency(request):
+    template = loader.get_template('index/addNewAgency.html')
+    template_name = 'index/addNewAgency.html'
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        city = request.POST.get('city')
+        contract_s_date = request.POST.get('contract_s_date')
+        contract_d_ate = request.POST.get('contract_d_ate')
+        contract_number = request.POST.get('contract_number')
+        a = Agency(name=name, city=city, contract_s_date=contract_s_date, contract_d_ate=contract_d_ate, contract_number=contract_number)    
+        a.save()
+    return render(request, template_name, {})
+
+
+def airport(request):
+    template = loader.get_template('index/airports.html')
+    context = {'data': []}
+    obj = Airport.objects.all()
+    
+    airport_data = []
+    for item in obj:
+        serialized_obj = model_to_dict(item)
+        airport_data.append(serialized_obj)
+
+    context = {'data': airport_data}
+    print(context)
+    return HttpResponse(template.render(context, request))
+
+
+
+@csrf_exempt 
+def addNewAirport(request):
+    template = loader.get_template('index/addNewAirport.html')
+    template_name = 'index/addNewAirport.html'
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        city = request.POST.get('city')
+        a = Airport(name=name, city=city)    
+        a.save()
+    return render(request, template_name, {})
+
+
+def crew(request):
+    template = loader.get_template('index/airportCrewTeam.html')
+    # context = {'data': []}
+    obj = Crew.objects.all()
+    
+    crew_data = []
+    for item in obj:
+        serialized_obj = model_to_dict(item)
+        crew_data.append(serialized_obj)
+
+    context = {'data': crew_data}
+    print("hereee")
+    print(context)
+    return HttpResponse(template.render(context, request))
+
+
+
+@csrf_exempt 
+def addNewCrew(request):
+    template = loader.get_template('index/addNewPeople.html')
+    template_name = 'index/addNewPeople.html'
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        family_name = request.POST.get('family_name')
+        # gender = request.POST.get('gender')
+        email = request.POST.get('email')
+        user_name = request.POST.get('user_name')
+        password = request.POST.get('password')
+        height = request.POST.get('height')
+        phone_number = request.POST.get('phone_number')
+        address = request.POST.get('address')
+        new = Crew(name=name, family_name=family_name, email=email, user_name=user_name, password=password,
+         height=height, phone_number=phone_number, address=address)
+        print(new)
+        new.save()
+    return render(request, template_name, {})
+

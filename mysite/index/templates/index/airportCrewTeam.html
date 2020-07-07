@@ -230,7 +230,6 @@
         </div>
       </div>
       <!-- search form -->
-      {% csrf_token %}
       <form action="#" method="get" class="sidebar-form">
         <div class="input-group">
           <input type="text" name="q" class="form-control" placeholder="جستجو">
@@ -306,8 +305,8 @@
         <small>کنترل پنل</small>
       </h1>
       <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> بلیط‌ها</a></li>
-        <li class="active">لیست بلیط‌ها</li>
+        <li><a href="#"><i class="fa fa-dashboard"></i> تیم خدمه</a></li>
+        <li class="active">لیست خدمه</li>
       </ol>
     </section>
 
@@ -318,15 +317,15 @@
           <!-- ./col -->
           <div class="col-lg-3 col-xs-6">
             <!-- small box -->
-            <div class="small-box bg-yellow">
+            <div class="small-box bg-purple">
                 <div class="inner">
                 <h3>44</h3>
-                <p>ثبت بلیط جدید</p>
+                <p>ثبت خدمه جدید</p>
                 </div>
                 <div class="icon">
                 <i class="fa fa-plus-square"></i>
                 </div>
-                <a href="addNewTicket.html" class="small-box-footer">اطلاعات بیشتر <i class="fa fa-arrow-circle-left"></i></a>
+                <a href="addNewPeople.html" class="small-box-footer">اطلاعات بیشتر <i class="fa fa-arrow-circle-left"></i></a>
             </div>
             </div>
   
@@ -359,9 +358,9 @@
       <div class="row">
         <div class="col-xs-12">
 
-          <div class="box box-warning">
+          <div class="box box-primary">
             <div class="box-header">
-              <h3 class="box-title">لیست بلیط‌ها</h3>
+              <h3 class="box-title">لیست تیم خدمه</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -369,22 +368,27 @@
                 <thead>
                 <tr>
                   <th>ردیف</th>
-                  <th>شماره پرواز</th>
-                  <th>شهر مبدا</th>
-                  <th>شهر مقصد</th>
-                  <th>زمان پرواز</th>
-                  <th>زمان رسیدن</th>
+                  <th>نام</th>
+                  <th>نام خانوادگی</th>
+                  <th>سن</th>
+                  <th>قد</th>
+                  <th>شماره تلفن</th>
+                  <th>آدرس</th>
+                  <th>خلبان/غیرخلبان</th>
 
                 </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>183</td>
-                    <td>۶۵۴۶۵۴</td>
-                    <td>تهران</td>
-                    <td>شیراز</td>
-                    <td>۹۹/۳/۱</td>
-                    <td>۹۹/۱۲/۱</td>
+                    <td>۱</td>
+                    <td>علی</td>
+                    <td>اکبری</td>
+                    <td>۳۵</td>
+                    <td>۱۸۰</td>
+                    <td>۰۳۱۰۰۰۶۵۴۶</td>
+                    <td>پیروزی - بلوار ابپذر</td>
+                    <td>خلبان</td>
+
                     </tr>   
                 </tbody>
               </table>

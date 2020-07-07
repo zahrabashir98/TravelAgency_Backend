@@ -54,19 +54,19 @@ class Airport(models.Model):
     name = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
 
-class Airplane(models.Model):
+class AirCraft(models.Model):
     model = models.CharField(max_length=100)
     capacity = models.IntegerField()
 
 class Crew(models.Model):
-    name = models.CharField(max_length=100)
-    famly_name = models.CharField(max_length=100)
-    gender = models.CharField(max_length=10, choices=TITLE_CHOICES)
-    email = models.CharField(max_length=100)
-    user_name = models.CharField(max_length=100)
-    password = models.CharField(max_length=100)
-    height = models.CharField(max_length=100)
+    name = models.CharField(max_length=100,null=True)
+    family_name = models.CharField(max_length=100,null=True)
+    # gender = models.CharField(max_length=10, choices=TITLE_CHOICES)
+    email = models.CharField(max_length=100,null=True)
+    user_name = models.CharField(max_length=100,null=True)
+    password = models.CharField(max_length=100,null=True)
+    height = models.CharField(max_length=100,null=True)
     # bool - khalaban ya na
     # image
-    phone_number = models.IntegerField()
-    address = models.CharField(max_length=200)
+    phone_number = models.IntegerField(null=True)
+    address = models.CharField(max_length=200,null=True)
