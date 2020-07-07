@@ -7,7 +7,7 @@ from django.http import HttpResponse
 
 from django.template import loader
 from index.forms import FlightForm
-from index.models import Flight, Ticket, Agency, Airport, Crew
+from index.models import Flight, Ticket, Agency, Airport, Crew, Aircraft
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 
@@ -15,15 +15,42 @@ from django.core import serializers
 def main(request):
     template = loader.get_template('index/myindex.html')
     context = {
-        'data': 'latest_question_list',
+        'data': [],
     }
     return HttpResponse(template.render(context, request))
 
 def flights(request):
     template = loader.get_template('index/airportFlights.html')
-    context = {
-        'data': 'latest_question_list',
-    }    
+    context = {'data': []} 
+
+    f = Flight.objects.all()
+    crew_list = []
+    counter = 0
+    airplane_list = {new_list: [] for new_list in range(len(f))} 
+    crew_list = {new_list: [] for new_list in range(len(f))}
+    passenger_list = {new_list: [] for new_list in range(len(f))}
+
+    for item in f:
+        json = model_to_dict(item)
+        context['data'].append(json)
+
+        for data in json['crew'] :
+            crew_list[counter].append(model_to_dict(data))
+        
+        for data1 in json['airplane']:
+            airplane_list[counter].append(model_to_dict(data1))
+
+        for data2 in json['passenger']:
+            passenger_list[counter].append(model_to_dict(data2))
+        counter += 1
+
+    for i in range(len(context['data'])):
+        context['data'][i]['crew'] = crew_list[i]
+        context['data'][i]['airplane'] = airplane_list[i]
+        context['data'][i]['passenger'] = passenger_list[i]
+    print('\n')
+    print(context)
+    print("**************\n")
 
     return HttpResponse(template.render(context, request))
 
@@ -166,6 +193,7 @@ def addNewCrew(request):
     template_name = 'index/addNewPeople.html'
 
     if request.method == 'POST':
+        print("POST")
         name = request.POST.get('name')
         family_name = request.POST.get('family_name')
         # gender = request.POST.get('gender')
@@ -175,9 +203,40 @@ def addNewCrew(request):
         height = request.POST.get('height')
         phone_number = request.POST.get('phone_number')
         address = request.POST.get('address')
+        profile_photo = request.POST.get('profile_photo')
+        pilot_or_not = request.POST.get('pilot_or_not')
         new = Crew(name=name, family_name=family_name, email=email, user_name=user_name, password=password,
-         height=height, phone_number=phone_number, address=address)
+         height=height, phone_number=phone_number, address=address, profile_photo=profile_photo, pilot_or_not=pilot_or_not)
         print(new)
         new.save()
+    return render(request, template_name, {})
+
+
+def aircraft(request):
+    template = loader.get_template('index/airportAircraft.html')
+    # context = {'data': []}
+    obj = Aircraft.objects.all()
+    
+    aircraft_data = []
+    for item in obj:
+        serialized_obj = model_to_dict(item)
+        aircraft_data.append(serialized_obj)
+
+    context = {'data': aircraft_data}
+    print(context)
+    return HttpResponse(template.render(context, request))
+
+
+
+@csrf_exempt 
+def addNewAircraft(request):
+    template = loader.get_template('index/addNewAircraft.html')
+    template_name = 'index/addNewAircraft.html'
+
+    if request.method == 'POST':
+        model = request.POST.get('model')
+        capacity = request.POST.get('capacity')
+        a = Aircraft(model=model, capacity=capacity)
+        a.save()
     return render(request, template_name, {})
 

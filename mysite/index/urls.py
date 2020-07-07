@@ -17,8 +17,10 @@ urlpatterns=[
     url('addnewagency', views.addNewAgency),
     url('airports', views.airport),
     url('addnewairport', views.addNewAirport),
-    url('crew', views.crew),
     url('addnewcrew', views.addNewCrew),
+    url('crew', views.crew),
+    url('addnewaircraft', views.addNewAircraft),
+    url('aircraft', views.aircraft),
 
 
 ]
