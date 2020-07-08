@@ -21,6 +21,8 @@ urlpatterns=[
     url('crew', views.crew),
     url('addnewaircraft', views.addNewAircraft),
     url('aircraft', views.aircraft),
+    url('airportmoreinfo', views.airportMoreInfo),
+    
 
 
 ]

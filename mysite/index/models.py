@@ -34,14 +34,16 @@ class Agency(models.Model):
     contract_d_ate = models.DateField()
     contract_number = models.IntegerField()
 
-class Airport(models.Model):
-    name = models.CharField(max_length=100)
-    city = models.CharField(max_length=100)
-
 class Aircraft(models.Model):
     model = models.CharField(max_length=100)
     capacity = models.IntegerField()
 
+
+class Airport(models.Model):
+    name = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    airplane = models.ManyToManyField(Aircraft, null=True)
+    agency = models.ManyToManyField(Agency, null=True)
 
 BINARY_CHOICES = [
     ('Pilot', 'yes'),
@@ -71,6 +73,7 @@ class Flight(models.Model):
     crew = models.ManyToManyField(Crew, null=True)
     airplane = models.ManyToManyField(Aircraft, null=True)
     passenger = models.ManyToManyField(Passenger, null=True)
+    airport = models.ForeignKey(Airport, on_delete=models.CASCADE, null=True)
     # def __str__(self):
     #     return self.flight_no
 

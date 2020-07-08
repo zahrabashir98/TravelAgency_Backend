@@ -48,6 +48,8 @@ def flights(request):
         context['data'][i]['crew'] = crew_list[i]
         context['data'][i]['airplane'] = airplane_list[i]
         context['data'][i]['passenger'] = passenger_list[i]
+        if context['data'][i]['airport'] is not None:
+            context['data'][i]['airport'] = model_to_dict(Airport.objects.get(id = int(context['data'][i]['airport'] )))
     print('\n')
     print(context)
     print("**************\n")
@@ -60,23 +62,44 @@ def addNewFlight(request):
     # modle Add newTicket ham mitoonam beznam
     template_name  = 'index/addNewFlight.html'
     template = loader.get_template('index/addNewFlight.html')
+    if request.method=='POST':
+        flight_no = request.POST.get('flight_no')
+        s_city = request.POST.get('s_city')
+        d_city = request.POST.get('d_city')
+        time_1 = request.POST.get('time_1')
+        time_2 = request.POST.get('time_2')
+        capacity = request.POST.get('capacity')
+        pilot = request.POST.get('pilot')
+        crew = request.POST.get('crew')
+        airplane = request.POST.get('airplane')
+        passenger = request.POST.get('passenger')
+        airport = request.POST.get('airport')
 
-    if request.method == 'POST':
-        form = FlightForm(request.POST)
-        if form.is_valid():
-            print(form.cleaned_data)
-            data = form.cleaned_data
-            f = Flight(flight_no=data['flight_no'],
-             s_city=data['s_city'], d_city=data['d_city'], time_1=data['time_1'], time_2= data['time_2'], capacity=data['capacity'])
-            f.save()
-            form = FlightForm()
+        f = Flight(flight_no=flight_no,
+         s_city=s_city, d_city=d_city, time_1=time_1, time_2= time_2, capacity=capacity
+         , pilot=pilot, crew =crew, airplane = airplane, passenger=passenger, airport=airport)
+        f.save()    # if request.method == 'POST':
+        
+    return render(request, template_name, {})
 
-        arg = {"form":form, 'data': data}
-        return render(request, template_name, arg)
+        # return HttpResponse(template.render({"form":form}, request))
 
-    else:
-        form = FlightForm()
-        return render(request, template_name, {"form":form})
+    #     form = FlightForm(request.POST)
+    #     if form.is_valid():
+    #         print(form.cleaned_data)
+    #         data = form.cleaned_data
+    #         f = Flight(flight_no=data['flight_no'],
+    #          s_city=data['s_city'], d_city=data['d_city'], time_1=data['time_1'], time_2= data['time_2'], capacity=data['capacity']
+    #          , pilot=data['pilot'], crew =data['crew'], airplane = data['airplane'], passenger=data['passenger'], airport=data['airport'])
+    #         f.save()
+    #         form = FlightForm()
+
+    #     arg = {"form":form, 'data': data}
+    #     return render(request, template_name, arg)
+
+    # else:
+    #     form = FlightForm()
+    #     return render(request, template_name, {"form":form})
 
     #     return HttpResponse(template.render({"form":form}, request))
 
@@ -150,12 +173,84 @@ def airport(request):
     for item in obj:
         serialized_obj = model_to_dict(item)
         airport_data.append(serialized_obj)
-
+    print(airport_data)
     context = {'data': airport_data}
     print(context)
     return HttpResponse(template.render(context, request))
 
+# name migiram
+def airportMoreInfo(request):
+    template_name  = 'index/airportsMoreInfo.html'
+    template = loader.get_template('index/airportsMoreInfo.html')
+    # airplane_list = {new_list: [] for new_list in range(len(f))} 
 
+    context= {'flight':[],'ticket':[], 'crew':[], 'airplane':[], 'agency':[]}
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        airport = Airport.objects.get(name=name)
+        # print(airport)
+        f = Flight.objects.filter(airport=airport)
+        t = []
+        c = []
+        for data in f:
+            # print(Ticket.objects.filter(flight_no = model_to_dict(data)['flight_no']))
+            for small in Ticket.objects.filter(flight_no = model_to_dict(data)['flight_no']) :
+                t.append(small)
+            for smalll in model_to_dict(data)['crew']:
+                c.append(smalll)
+        
+        a = model_to_dict(airport)['airplane']
+        ag = model_to_dict(airport)['agency']
+        flight_list = []
+        ticket_list = []
+        crew_list = []
+        airplane_list = []
+        agency_list = []
+
+        for obj in f:
+            flight_list.append(model_to_dict(obj))
+        # print(flight_list)
+        for obj in t:
+            ticket_list.append(model_to_dict(obj))
+        for obj in c:
+            crew_list.append(model_to_dict(obj))
+        for obj in a:
+            airplane_list.append(model_to_dict(obj))
+        for obj in ag:
+            agency_list.append(model_to_dict(obj))
+        
+        print(flight_list)
+        crew_list_1 = {new_list: [] for new_list in range(1000)}
+        passenger_list = {new_list: [] for new_list in range(1000)}
+        airplane_list_1 = {new_list: [] for new_list in range(1000)}
+        counter = 0
+        print("***********\n")
+        for item in flight_list:
+            print(item)
+            context['flight'].append(item)
+            for data in item['crew']:
+                crew_list_1[counter].append(model_to_dict(data))
+            
+            for data1 in item['airplane']:
+                airplane_list_1[counter].append(model_to_dict(data1))
+
+            for data2 in item['passenger']:
+                passenger_list[counter].append(model_to_dict(data2))
+            counter += 1
+        for i in range(len(context['flight'])):
+            context['flight'][i]['crew'] = crew_list_1[i]
+            context['flight'][i]['airplane'] = airplane_list_1[i]
+            context['flight'][i]['passenger'] = passenger_list[i]
+
+        print("********************\n")
+
+        context['ticket'] = ticket_list
+        context['crew'] = crew_list
+        context['airplane'] = airplane_list
+        context['agency'] = agency_list
+
+        print(context)
+    return HttpResponse(template.render({}, request))
 
 @csrf_exempt 
 def addNewAirport(request):
@@ -165,7 +260,9 @@ def addNewAirport(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         city = request.POST.get('city')
-        a = Airport(name=name, city=city)    
+        airplane = request.POST.get('airplane')
+        agency = request.POST.get('agency')
+        a = Airport(name=name, city=city, airplane=airplane, agency=agency)    
         a.save()
     return render(request, template_name, {})
 
@@ -239,4 +336,3 @@ def addNewAircraft(request):
         a = Aircraft(model=model, capacity=capacity)
         a.save()
     return render(request, template_name, {})
-
