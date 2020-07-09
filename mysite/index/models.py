@@ -40,7 +40,7 @@ class Aircraft(models.Model):
 
 
 class Airport(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     city = models.CharField(max_length=100)
     airplane = models.ManyToManyField(Aircraft, null=True)
     agency = models.ManyToManyField(Agency, null=True)

@@ -119,26 +119,6 @@ def addNewFlight(request):
     
 def tickets(request):
     template = loader.get_template('index/airportTickets.html')
-
-    # ticket_list = [t.flight_no for t in Ticket.objects.all()]
-    # flights_data = []
-    # for item in ticket_list:
-    #     obj = Flight.objects.get(flight_no=item)
-    #     serialized_obj = model_to_dict(obj)
-    #     flights_data.append(serialized_obj)
-    # inner_list = []
-    # creww = []
-    # for obj in flights_data:
-    #     print(obj)
-    #     inner_list.append(obj['crew'])
-
-    # for inn in inner_list:
-    #     for innn in inn:
-    #         creww.append(model_to_dict(innn))
-
-    # context = {'data': flights_data}
-    # context['data'][0]['crew'] = creww
-    # print(context)
     context = {'data': []} 
     ticket_list = [t.flight_no for t in Ticket.objects.all()]
     flights_list_obj = []
@@ -250,14 +230,34 @@ def airport(request):
     template = loader.get_template('index/airports.html')
     context = {'data': []}
     obj = Airport.objects.all()
-    
-    airport_data = []
-    for item in obj:
-        serialized_obj = model_to_dict(item)
-        airport_data.append(serialized_obj)
-    print(airport_data)
-    context = {'data': airport_data}
+    # f = flights_list_obj
+    f = obj
+
+    counter = 0
+    airplane_list = {new_list: [] for new_list in range(len(f))} 
+    agency_list = {new_list: [] for new_list in range(len(f))}
+
+    for item in f:
+        json = model_to_dict(item)
+        context['data'].append(json)
+
+        for data in json['agency'] :
+            agency_list[counter].append(model_to_dict(data))
+        
+        for data1 in json['airplane']:
+            # print(model_to_dict(data1))
+            airplane_list[counter].append(model_to_dict(data1))
+
+        counter += 1
+    # print(airplane_list)
+    inner_list = []
+    inner_list_1 = []
+    for i in range(len(context['data'])):
+        # print(i)
+        context['data'][i]['agency'] = agency_list[i]
+        context['data'][i]['airplane'] = airplane_list[i]
     print(context)
+
     return HttpResponse(template.render(context, request))
 
 # name migiram
