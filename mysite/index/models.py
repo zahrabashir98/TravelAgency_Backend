@@ -53,7 +53,7 @@ class Crew(models.Model):
     name = models.CharField(max_length=100,null=True)
     family_name = models.CharField(max_length=100,null=True)
     # gender = models.CharField(max_length=10, choices=TITLE_CHOICES)
-    email = models.CharField(max_length=100,null=True)
+    email = models.EmailField(max_length=100,null=True)
     user_name = models.CharField(max_length=100,null=True, unique=True)
     password = models.CharField(max_length=100,null=True)
     height = models.CharField(max_length=100,null=True)

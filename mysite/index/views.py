@@ -230,7 +230,6 @@ def airport(request):
     template = loader.get_template('index/airports.html')
     context = {'data': []}
     obj = Airport.objects.all()
-    # f = flights_list_obj
     f = obj
 
     counter = 0
@@ -260,7 +259,7 @@ def airport(request):
 
     return HttpResponse(template.render(context, request))
 
-# name migiram
+# I receive name from front-end
 def airportMoreInfo(request):
     template_name  = 'index/airportsMoreInfo.html'
     template = loader.get_template('index/airportsMoreInfo.html')
@@ -301,14 +300,14 @@ def airportMoreInfo(request):
         for obj in ag:
             agency_list.append(model_to_dict(obj))
         
-        print(flight_list)
+        # print(flight_list)
         crew_list_1 = {new_list: [] for new_list in range(1000)}
         passenger_list = {new_list: [] for new_list in range(1000)}
         airplane_list_1 = {new_list: [] for new_list in range(1000)}
         counter = 0
         print("***********\n")
         for item in flight_list:
-            print(item)
+            # print(item)
             context['flight'].append(item)
             for data in item['crew']:
                 crew_list_1[counter].append(model_to_dict(data))
@@ -351,7 +350,6 @@ def addNewAirport(request):
 
 def crew(request):
     template = loader.get_template('index/airportCrewTeam.html')
-    # context = {'data': []}
     obj = Crew.objects.all()
     
     crew_data = []
