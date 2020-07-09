@@ -190,16 +190,26 @@ def tickets(request):
 
     return HttpResponse(template.render(context, request))
 
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError
 
 @csrf_exempt 
 def addNewTicket(request):
     template = loader.get_template('index/addNewTicket.html')
 
     if request.method == 'POST':
-        flight_no = request.POST.get('flight_no')
-        # print(request.POST.get('flight_no'))
+
+        try:
+            flight_no = request.POST.get('flight_no')
+        except IntegrityError as e: 
+            print(e)
+            print("*************")
+            if 'unique constraint' in e.message:
+                print("HERE")
+
         t = Ticket(flight_no=int(flight_no))
         t.save()
+    print("CREATED")
     return render(request, 'index/addNewTicket.html', {"data": flight_no})
 
 
@@ -232,6 +242,7 @@ def addNewAgency(request):
         contract_number = request.POST.get('contract_number')
         a = Agency(name=name, city=city, contract_s_date=contract_s_date, contract_d_ate=contract_d_ate, contract_number=contract_number)    
         a.save()
+    print("CREATED")
     return render(request, template_name, {})
 
 

@@ -22,7 +22,7 @@ class Passenger(models.Model):
     #     return self.name
 
 class Ticket(models.Model):
-    flight_no = models.IntegerField()
+    flight_no = models.IntegerField(unique=True)
     # flight = models.OneToOneField(Flight, on_delete=models.CASCADE)
     # flight = Flight.objects.get(flight_no=int(flight_no))
 
