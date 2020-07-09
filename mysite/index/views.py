@@ -38,18 +38,31 @@ def flights(request):
             crew_list[counter].append(model_to_dict(data))
         
         for data1 in json['airplane']:
+            # print(model_to_dict(data1))
             airplane_list[counter].append(model_to_dict(data1))
 
         for data2 in json['passenger']:
             passenger_list[counter].append(model_to_dict(data2))
         counter += 1
-
+    print(airplane_list)
+    inner_list = []
+    inner_list_1 = []
     for i in range(len(context['data'])):
+        print(i)
         context['data'][i]['crew'] = crew_list[i]
         context['data'][i]['airplane'] = airplane_list[i]
         context['data'][i]['passenger'] = passenger_list[i]
-        if context['data'][i]['airport'] is not None:
-            context['data'][i]['airport'] = model_to_dict(Airport.objects.get(id = int(context['data'][i]['airport'] )))
+        # if context['data'][i]['airport'] is not None:
+        context['data'][i]['airport'] = [model_to_dict(Airport.objects.get(id = int(context['data'][i]['airport'] )))]
+        for data4 in context['data'][i]['airport']:
+            # print(data4['airplane'])
+            for obj in data4['airplane']:
+                inner_list.append(model_to_dict(obj))
+            for obj1 in data4['agency']:
+                inner_list_1.append(model_to_dict(obj1))
+            
+        context['data'][i]['airport'][0]['airplane'] = inner_list
+        context['data'][i]['airport'][0]['agency'] = inner_list_1
     print('\n')
     print(context)
     print("**************\n")

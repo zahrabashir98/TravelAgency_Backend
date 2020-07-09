@@ -16,7 +16,7 @@ class Passenger(models.Model):
     age = models.IntegerField()
     phone_number = models.IntegerField()
     address = models.CharField(max_length=200)
-    # flight = models.ManyToManyField('Flight')
+
     
     # def __str__(self):
     #     return self.name
@@ -32,10 +32,10 @@ class Agency(models.Model):
     city = models.CharField(max_length=100)
     contract_s_date = models.DateField()
     contract_d_ate = models.DateField()
-    contract_number = models.IntegerField()
+    contract_number = models.IntegerField(unique=True)
 
 class Aircraft(models.Model):
-    model = models.CharField(max_length=100)
+    model = models.CharField(max_length=100, unique=True)
     capacity = models.IntegerField()
 
 
@@ -54,7 +54,7 @@ class Crew(models.Model):
     family_name = models.CharField(max_length=100,null=True)
     # gender = models.CharField(max_length=10, choices=TITLE_CHOICES)
     email = models.CharField(max_length=100,null=True)
-    user_name = models.CharField(max_length=100,null=True)
+    user_name = models.CharField(max_length=100,null=True, unique=True)
     password = models.CharField(max_length=100,null=True)
     height = models.CharField(max_length=100,null=True)
     pilot_or_not = models.CharField(max_length=10, choices=BINARY_CHOICES, null=True)
@@ -63,7 +63,7 @@ class Crew(models.Model):
     address = models.CharField(max_length=200,null=True)
 
 class Flight(models.Model):
-    flight_no = models.IntegerField()
+    flight_no = models.IntegerField(unique=True)
     s_city = models.CharField(max_length=100)
     d_city = models.CharField(max_length=100)
     time_1 = models.DateField()
