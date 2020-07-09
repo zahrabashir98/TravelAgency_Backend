@@ -2,6 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.forms.models import model_to_dict
+from django.http import JsonResponse
 
 from django.http import HttpResponse
 
@@ -66,8 +67,8 @@ def flights(request):
     print('\n')
     print(context)
     print("**************\n")
-
-    return HttpResponse(template.render(context, request))
+    return JsonResponse(context, safe=False)
+    # return HttpResponse(template.render(context, request))
 
 
 @csrf_exempt 
@@ -92,7 +93,7 @@ def addNewFlight(request):
          s_city=s_city, d_city=d_city, time_1=time_1, time_2= time_2, capacity=capacity
          , pilot=pilot, crew =crew, airplane = airplane, passenger=passenger, airport=airport)
         f.save()    # if request.method == 'POST':
-        
+    # return JsonResponse(context, safe=False)
     return render(request, template_name, {})
 
         # return HttpResponse(template.render({"form":form}, request))
@@ -167,8 +168,9 @@ def tickets(request):
         context['data'][i]['airport'][0]['airplane'] = inner_list
         context['data'][i]['airport'][0]['agency'] = inner_list_1
     print(context)
+    return JsonResponse(context, safe=False)
 
-    return HttpResponse(template.render(context, request))
+    # return HttpResponse(template.render(context, request))
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
@@ -190,7 +192,8 @@ def addNewTicket(request):
         t = Ticket(flight_no=int(flight_no))
         t.save()
     print("CREATED")
-    return render(request, 'index/addNewTicket.html', {"data": flight_no})
+    return JsonResponse(flight_no, safe=False)
+    # return render(request, 'index/addNewTicket.html', {"data": flight_no})
 
 
     
@@ -206,7 +209,8 @@ def agency(request):
 
     context = {'data': agency_data}
     print(context)
-    return HttpResponse(template.render(context, request))
+    return JsonResponse(context, safe=False)
+    # return HttpResponse(template.render(context, request))
 
 
 @csrf_exempt 
@@ -223,7 +227,9 @@ def addNewAgency(request):
         a = Agency(name=name, city=city, contract_s_date=contract_s_date, contract_d_ate=contract_d_ate, contract_number=contract_number)    
         a.save()
     print("CREATED")
-    return render(request, template_name, {})
+    return JsonResponse({'data':"Created"}, safe=False)
+
+    # return render(request, template_name, {})
 
 
 def airport(request):
@@ -256,8 +262,8 @@ def airport(request):
         context['data'][i]['agency'] = agency_list[i]
         context['data'][i]['airplane'] = airplane_list[i]
     print(context)
-
-    return HttpResponse(template.render(context, request))
+    return JsonResponse(context, safe=False)
+    # return HttpResponse(template.render(context, request))
 
 # I receive name from front-end
 def airportMoreInfo(request):
@@ -331,7 +337,9 @@ def airportMoreInfo(request):
         context['agency'] = agency_list
 
         print(context)
-    return HttpResponse(template.render({}, request))
+    return JsonResponse(context, safe=False)
+
+    # return HttpResponse(template.render({}, request))
 
 @csrf_exempt 
 def addNewAirport(request):
@@ -360,7 +368,9 @@ def crew(request):
     context = {'data': crew_data}
     print("hereee")
     print(context)
-    return HttpResponse(template.render(context, request))
+    return JsonResponse(context, safe=False)
+
+    # return HttpResponse(template.render(context, request))
 
 
 
@@ -386,7 +396,9 @@ def addNewCrew(request):
          height=height, phone_number=phone_number, address=address, profile_photo=profile_photo, pilot_or_not=pilot_or_not)
         print(new)
         new.save()
-    return render(request, template_name, {})
+    return JsonResponse({'data':"CREATED"}, safe=False)
+
+    # return render(request, template_name, {})
 
 
 def aircraft(request):
@@ -401,7 +413,9 @@ def aircraft(request):
 
     context = {'data': aircraft_data}
     print(context)
-    return HttpResponse(template.render(context, request))
+    # return context
+    return JsonResponse(context, safe=False)
+    # return HttpResponse(template.render(context, request))
 
 
 
@@ -415,4 +429,5 @@ def addNewAircraft(request):
         capacity = request.POST.get('capacity')
         a = Aircraft(model=model, capacity=capacity)
         a.save()
-    return render(request, template_name, {})
+    # return render(request, template_name, {})
+    return JsonResponse({'data':"CREATED"}, safe=False)

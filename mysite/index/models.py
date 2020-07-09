@@ -58,7 +58,7 @@ class Crew(models.Model):
     password = models.CharField(max_length=100,null=True)
     height = models.CharField(max_length=100,null=True)
     pilot_or_not = models.CharField(max_length=10, choices=BINARY_CHOICES, null=True)
-    profile_photo = models.ImageField(upload_to='uploads/', height_field=None, width_field=None, max_length=100, null=True)
+    # profile_photo = models.ImageField(upload_to='uploads/', height_field=None, width_field=None, max_length=100, null=True)
     phone_number = models.IntegerField(null=True)
     address = models.CharField(max_length=200,null=True)
 
