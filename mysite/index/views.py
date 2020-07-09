@@ -120,14 +120,72 @@ def addNewFlight(request):
 def tickets(request):
     template = loader.get_template('index/airportTickets.html')
 
+    # ticket_list = [t.flight_no for t in Ticket.objects.all()]
+    # flights_data = []
+    # for item in ticket_list:
+    #     obj = Flight.objects.get(flight_no=item)
+    #     serialized_obj = model_to_dict(obj)
+    #     flights_data.append(serialized_obj)
+    # inner_list = []
+    # creww = []
+    # for obj in flights_data:
+    #     print(obj)
+    #     inner_list.append(obj['crew'])
+
+    # for inn in inner_list:
+    #     for innn in inn:
+    #         creww.append(model_to_dict(innn))
+
+    # context = {'data': flights_data}
+    # context['data'][0]['crew'] = creww
+    # print(context)
+    context = {'data': []} 
     ticket_list = [t.flight_no for t in Ticket.objects.all()]
-    flights_data = []
+    flights_list_obj = []
     for item in ticket_list:
         obj = Flight.objects.get(flight_no=item)
-        serialized_obj = model_to_dict(obj)
-        flights_data.append(serialized_obj)
-    
-    context = {'data': flights_data}
+        flights_list_obj.append(obj)
+    print(flights_list_obj)
+    f = flights_list_obj
+    crew_list = []
+    counter = 0
+    airplane_list = {new_list: [] for new_list in range(len(f))} 
+    crew_list = {new_list: [] for new_list in range(len(f))}
+    passenger_list = {new_list: [] for new_list in range(len(f))}
+
+    for item in f:
+        json = model_to_dict(item)
+        context['data'].append(json)
+
+        for data in json['crew'] :
+            crew_list[counter].append(model_to_dict(data))
+        
+        for data1 in json['airplane']:
+            # print(model_to_dict(data1))
+            airplane_list[counter].append(model_to_dict(data1))
+
+        for data2 in json['passenger']:
+            passenger_list[counter].append(model_to_dict(data2))
+        counter += 1
+    # print(airplane_list)
+    inner_list = []
+    inner_list_1 = []
+    for i in range(len(context['data'])):
+        # print(i)
+        context['data'][i]['crew'] = crew_list[i]
+        context['data'][i]['airplane'] = airplane_list[i]
+        context['data'][i]['passenger'] = passenger_list[i]
+        # if context['data'][i]['airport'] is not None:
+        context['data'][i]['airport'] = [model_to_dict(Airport.objects.get(id = int(context['data'][i]['airport'] )))]
+        for data4 in context['data'][i]['airport']:
+            # print(data4['airplane'])
+            for obj in data4['airplane']:
+                inner_list.append(model_to_dict(obj))
+            for obj1 in data4['agency']:
+                inner_list_1.append(model_to_dict(obj1))
+            
+        context['data'][i]['airport'][0]['airplane'] = inner_list
+        context['data'][i]['airport'][0]['agency'] = inner_list_1
     print(context)
 
     return HttpResponse(template.render(context, request))
