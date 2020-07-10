@@ -8,10 +8,24 @@ from django.http import HttpResponse
 
 from django.template import loader
 from index.forms import FlightForm
-from index.models import Flight, Ticket, Agency, Airport, Crew, Aircraft
+from index.models import Flight, Ticket, Agency, Airport, Crew, Aircraft, Passenger
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 
+import rest_framework
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+
+# class New(APIView):
+#     def post(self, request, format='json'):
+#         print(request.data)
+#         return Response({'data':"CREATED"})
+
+#     def get(self, request, format='json'):
+#         print(request.data)
+#         return Response({'data':"CREATED"})
 
 def main(request):
     template = loader.get_template('index/myindex.html')
@@ -400,6 +414,7 @@ def addNewCrew(request):
 
     # return render(request, template_name, {})
 
+import requests 
 
 def aircraft(request):
     template = loader.get_template('index/airportAircraft.html')
@@ -410,6 +425,7 @@ def aircraft(request):
     for item in obj:
         serialized_obj = model_to_dict(item)
         aircraft_data.append(serialized_obj)
+    
 
     context = {'data': aircraft_data}
     print(context)
@@ -423,11 +439,28 @@ def aircraft(request):
 def addNewAircraft(request):
     template = loader.get_template('index/addNewAircraft.html')
     template_name = 'index/addNewAircraft.html'
-
+    # print(request.data)
+    # r = requests.get(url = 'http://127.0.0.1:8000/my_index/addnewaircraft') 
+    # print(r)
     if request.method == 'POST':
         model = request.POST.get('model')
         capacity = request.POST.get('capacity')
         a = Aircraft(model=model, capacity=capacity)
         a.save()
     # return render(request, template_name, {})
-    return JsonResponse({'data':"CREATED"}, safe=False)
+    return JsonResponse({}, safe=False)
+
+
+# I receive name 
+def passengerInfo(request):
+    context = {'data':[]}
+    if request.method == 'POST':
+        passenger_id = request.POST.get('id')
+        p = Passenger.objects.get(id=passenger_id)
+        f = Flight.objects.filter(passenger=p)
+        for item in f:
+            context['data'].append(model_to_dict(item))
+        # print(context['data'])
+
+        return JsonResponse({}, safe=False)
+

@@ -22,7 +22,7 @@ urlpatterns=[
     url('addnewaircraft', views.addNewAircraft),
     url('aircraft', views.aircraft),
     url('airportmoreinfo', views.airportMoreInfo),
-    
-
+    url('passengerinfo', views.passengerInfo)
+    # url('New', views.New.as_view())
 
 ]
